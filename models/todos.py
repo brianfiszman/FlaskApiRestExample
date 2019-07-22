@@ -40,12 +40,3 @@ class TodoList(Resource):
         todo_id = 'todo%i' % todo_id
         todos[todo_id] = {'task': args['task']}
         return todos[todo_id], 201
-
-
-class TodoSimple(Resource):
-    def get(self, todo_id):
-        return {todo_id: todos[todo_id]} if todo_id else {todos}
-
-    def put(self, todo_id):
-        todos[todo_id] = request.form['data']
-        return {todo_id: todos[todo_id]}
