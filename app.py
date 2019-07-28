@@ -1,10 +1,19 @@
 from flask import Flask
-from flask_restful import Api
-from models.todos import Todo, TodoList
-from models.helloworld import HelloWorld
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-api = Api(app)
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123123@localhost/todos"
+db = SQLAlchemy(app)
 
-api.add_resource(TodoList, '/todos')
-api.add_resource(Todo, '/todos/<string:todo_id>')
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(128), unique=True, nullable=False)
+    email = db.Column(db.String(128), unique=True, nullable=False)
+
+
+db.create_all()
+db.session.add(User(username="Flask", email="example@example.com"))
+db.session.commit()
+
+users = User.query.all()
