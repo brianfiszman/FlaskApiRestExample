@@ -1,19 +1,21 @@
 from flask import Flask
+from .config.database import db
+from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123123@localhost/todos"
-db = SQLAlchemy(app)
+conn = "mysql://root:123123@localhost/todos"
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128), unique=True, nullable=False)
-    email = db.Column(db.String(128), unique=True, nullable=False)
+def create_app():
+    app = Flask(__name__)
+    app.config["SQLALCHEMY_DATABASE_URI"] = conn
+    return app
 
 
-db.create_all()
-db.session.add(User(username="Flask", email="example@example.com"))
-db.session.commit()
+app = create_app()
 
-users = User.query.all()
+with app.app_context():
+    db.init_app(app)
+    from .controllers.user import UserController
+    api = Api(app)
+    api.add_resource(UserController, '/user')
