@@ -1,8 +1,6 @@
 from flask import Flask
 from .config.database import db
 from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 
 conn = "mysql://root:123123@localhost/todos"
 
@@ -16,7 +14,6 @@ def create_app():
 app = create_app()
 
 with app.app_context():
-    ma = Marshmallow(app)
     db.init_app(app)
     from .controllers.user import UserController
     api = Api(app)
