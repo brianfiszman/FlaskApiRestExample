@@ -7,6 +7,5 @@ from ..models.user import User
 class UserController(Resource):
     def get(self):
         all_users = User.query.all()
-        all_users = map(lambda user: User.to_dict(user), all_users)
-        # res = jsonify(all)
+        list(map(lambda user: json.loads(user.toJSON()), all_users))
         return list(all_users)
