@@ -16,6 +16,11 @@ class User(db.Model):
         users = User.query.all()
         return users_schema.dump(users)
 
+    def createUser(args):
+        user = User(args.username, args.email)
+        db.session.add(user)
+        db.session.commit()
+
 
 class UserSchema(ModelSchema):
     class Meta:
